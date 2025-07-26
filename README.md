@@ -48,6 +48,8 @@ python3 pykmstool.py list-key-versions --project-id example-project --location-i
 
 ## Docker usage
 
-1. Clone this repository.
-2. Run `docker build -t pykmstool .`
-3. Run `docker run -it -v ./gcloud-config:/root/.config/gcloud pykmstool sign-csr ...`
+```
+docker run -v ./gcloud-config:/root/.config/gcloud -it ghcr.io/icedevml/pykmstool:v1 sign-csr <... arguments ...>
+```
+
+Remember to delete `./gcloud-config` directory after finishing work with the tool.
