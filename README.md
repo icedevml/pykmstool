@@ -3,9 +3,9 @@
 ## Docker usage
 
 ```
-docker run && \
-   -v ./gcloud-config:/root/.config/gcloud && \
-   -it ghcr.io/icedevml/pykmstool:v1 && \
+docker run \
+   -v ./gcloud-config:/root/.config/gcloud \
+   -it ghcr.io/icedevml/pykmstool:v1 \
    sign-csr <... arguments ...>
 ```
 
@@ -39,15 +39,15 @@ Remember to delete `./gcloud-config` directory after finishing work with the too
 Generating a CSR:
 
 ```
-python3 pykmstool.py sign-csr && \
-    --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1 && \
+python3 pykmstool.py sign-csr \
+    --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1 \
     --x509-name "C=US,O=Example Corp,CN=example.com"
 ```
 
 Getting a PEM public key for given key version:
 
 ```
-python3 pykmstool.py get-public-key && \
+python3 pykmstool.py get-public-key \
     --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1
 ```
 
