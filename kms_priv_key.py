@@ -7,25 +7,18 @@ import base64
 import typing
 
 from cryptography.hazmat.primitives import serialization, hashes
-from cryptography.hazmat.primitives.asymmetric.padding import AsymmetricPadding
 from cryptography.hazmat.primitives.asymmetric import (
     rsa,
     utils as asym_utils,
 )
+from cryptography.hazmat.primitives.asymmetric.padding import AsymmetricPadding
 from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
-from google.cloud.kms_v1 import KeyManagementServiceClient, GetPublicKeyRequest, PublicKey
+from google.cloud.kms_v1 import KeyManagementServiceClient
 
 
 def crc32c(data: bytes) -> int:
-    """
-    Calculates the CRC32C checksum of the provided data.
-    Args:
-        data: the bytes over which the checksum should be calculated.
-    Returns:
-        An int representing the CRC32C checksum of the provided bytes.
-    """
     import crcmod  # type: ignore
 
     crc32c_fun = crcmod.predefined.mkPredefinedCrcFun("crc-32c")
@@ -39,10 +32,6 @@ class GoogleCloudKMSRSAPrivateKey(rsa.RSAPrivateKey):
 
     def __copy__(self) -> RSAPrivateKey:
         raise NotImplementedError()
-
-    def _key_info(self):
-        # Get key info from OCI Vault
-        pass
 
     def sign(
         self,
@@ -83,14 +72,6 @@ class GoogleCloudKMSRSAPrivateKey(rsa.RSAPrivateKey):
 
         return sign_response.signature
 
-    # Every method below here is unimplemented for now but needs to be
-    # present to satisfy the interface.
-    def decrypt(self, ciphertext: bytes, padding: AsymmetricPadding) -> bytes:
-        raise NotImplementedError()
-
-    def key_size(self) -> int:
-        raise NotImplementedError()
-
     def public_key(self) -> "rsa.RSAPublicKey":
         public_key = self.client.get_public_key(name=self.key_version_name)
 
@@ -98,6 +79,14 @@ class GoogleCloudKMSRSAPrivateKey(rsa.RSAPrivateKey):
             raise RuntimeError("Unexpected public key format received from KMS.")
 
         return load_pem_public_key(public_key.pem.encode("ascii"))
+
+    # Every method below here is unimplemented for now but needs to be
+    # present to satisfy the interface.
+    def decrypt(self, ciphertext: bytes, padding: AsymmetricPadding) -> bytes:
+        raise NotImplementedError()
+
+    def key_size(self) -> int:
+        raise NotImplementedError()
 
     def private_numbers(self) -> "rsa.RSAPrivateNumbers":
         raise NotImplementedError()
