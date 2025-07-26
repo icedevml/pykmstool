@@ -28,7 +28,7 @@ Or alternatively you can manually specify a service account JSON key file by app
 Generating a CSR:
 
 ```
-python3 app.py sign-csr && \
+python3 pykmstool.py sign-csr && \
     --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1 && \
     --x509-name "C=US,O=Example Corp,CN=example.com"
 ```
@@ -36,12 +36,12 @@ python3 app.py sign-csr && \
 Getting a PEM public key for given key version:
 
 ```
-python3 app.py get-public-key && \
+python3 pykmstool.py get-public-key && \
     --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1
 ```
 
 Listing all enabled key versions for a given location and/or project ID (only if the account has sufficient permissions to list resources):
 
 ```
-python3 app.py list-key-versions --project-id example-project --location-id europe-west6 
+python3 pykmstool.py list-key-versions --project-id example-project --location-id europe-west6 
 ```
