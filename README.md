@@ -45,3 +45,9 @@ Listing all enabled key versions for a given location and/or project ID (only if
 ```
 python3 pykmstool.py list-key-versions --project-id example-project --location-id europe-west6 
 ```
+
+## Docker usage
+
+1. Clone this repository.
+2. Run `docker build -t pykmstool .`
+3. Run `docker run -it -v ./gcloud-config:/root/.config/gcloud pykmstool sign-csr ...`
