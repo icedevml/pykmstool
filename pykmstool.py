@@ -1,6 +1,7 @@
 import click
 from click import ClickException
 from cryptography import x509
+from google.api_core.client_options import ClientOptions
 from google.api_core.exceptions import PermissionDenied
 from google.cloud import kms
 from google.cloud.kms_v1 import CryptoKeyVersion
@@ -45,7 +46,12 @@ def list_key_versions(location_id, project_id=None, service_account_file=None):
     if service_account_file:
         credentials = service_account.Credentials.from_service_account_file(service_account_file)
 
-    kms_client = kms.KeyManagementServiceClient(credentials=credentials)
+    kms_client = kms.KeyManagementServiceClient(
+        client_options=ClientOptions(
+            credentials_file=credentials,
+            quota_project_id=project_id
+        )
+    )
 
     check_project_ids = []
     check_location_ids = []
@@ -53,7 +59,10 @@ def list_key_versions(location_id, project_id=None, service_account_file=None):
     if project_id:
         check_project_ids.append(project_id)
     else:
-        projects_client = ProjectsClient(credentials=credentials).search_projects()
+        projects_client = ProjectsClient(client_options=ClientOptions(
+            credentials_file=credentials,
+            quota_project_id=project_id
+        )).search_projects()
 
         for project in projects_client:
             check_project_ids.append(project.project_id)
@@ -93,7 +102,13 @@ def get_public_key(key_version_name, service_account_file=None):
     if service_account_file:
         credentials = service_account.Credentials.from_service_account_file(service_account_file)
 
-    client = kms.KeyManagementServiceClient(credentials=credentials)
+    project_id = kms.KeyManagementServiceClient.parse_crypto_key_version_path(key_version_name)["project"]
+    client = kms.KeyManagementServiceClient(
+        client_options=ClientOptions(
+            credentials_file=credentials,
+            quota_project_id=project_id
+        )
+    )
 
     pk_pem = kms_get_public_key(client=client, key_version_name=key_version_name)
     click.echo(pk_pem)
@@ -110,13 +125,20 @@ def sign_csr(key_version_name, x509_name, hash_function, service_account_file=No
     if service_account_file:
         credentials = service_account.Credentials.from_service_account_file(service_account_file)
 
+    project_id = kms.KeyManagementServiceClient.parse_crypto_key_version_path(key_version_name)["project"]
+
     # unserialize and serialize to verify whether X.509 Name is correct
     try:
         rfc4514_name = x509.Name.from_rfc4514_string(x509_name).rfc4514_string()
     except ValueError:
         raise ClickException(f"Invalid RFC4514 X.509 name: {x509_name}")
 
-    client = kms.KeyManagementServiceClient(credentials=credentials)
+    client = kms.KeyManagementServiceClient(
+        client_options=ClientOptions(
+            credentials_file=credentials,
+            quota_project_id=project_id
+        )
+    )
     csr_pem = kms_sign_csr(
         client=client,
         key_version_name=key_version_name,
