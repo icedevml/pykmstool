@@ -37,6 +37,8 @@ python3 pykmstool.py sign-csr \
     --x509-name "C=US,O=Example Corp,CN=example.com"
 ```
 
+See `--help` for all available parameters.
+
 #### Getting a PEM public key for given key version
 
 ```
@@ -59,7 +61,7 @@ python3 pykmstool.py list-key-versions --project-id example-project --location-i
 ```
 docker run \
    -v ./gcloud-config:/root/.config/gcloud \
-   -it ghcr.io/icedevml/pykmstool:v3 \
+   -it ghcr.io/icedevml/pykmstool:v4 \
    -- \
    sign-csr \
    --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1 \
@@ -77,6 +79,6 @@ Remember to invalidate your credentials after finishing work with the tool, whic
 ```
 docker run \
    -v ./gcloud-config:/root/.config/gcloud \
-   -it ghcr.io/icedevml/pykmstool:v3 \
+   -it ghcr.io/icedevml/pykmstool:v4 \
    docker-revoke-credentials
 ```
