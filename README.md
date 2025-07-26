@@ -61,6 +61,9 @@ python3 pykmstool.py list-key-versions --project-id example-project --location-i
 
 ## Docker usage
 
+> [!TIP]
+> With the Docker flow, you don't need to perform "Installation" and "GCP Authentication" steps listed above. The Docker version will automatically lead you through those processes.
+
 ### Executing commands
 
 ```
