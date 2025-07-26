@@ -20,8 +20,13 @@
    gcloud auth application-default login
    ```
 
-   Or alternatively you can manually specify a service account JSON key file by appending
-   `--service-account-file path/to/credentials.json` to every `pykmstool` command in the further section.
+> [!TIP]
+> Alternatively, you can manually specify a service account JSON key file by appending
+> `--service-account-file path/to/credentials.json` to every `pykmstool` command invocation in the further section.
+
+> [!TIP]
+> If your quota project is different than the project where your KMS keys are, please append `--quota-project-id <...>`
+> on every invocation of `pykmstool` commands listed in the further section.
 
 ### Tool usage
 
