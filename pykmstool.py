@@ -4,7 +4,7 @@ from cryptography import x509
 from google.api_core.client_options import ClientOptions
 from google.api_core.exceptions import PermissionDenied
 from google.cloud import kms
-from google.cloud.kms_v1 import CryptoKeyVersion
+from google.cloud.kms_v1 import CryptoKeyVersion, ProtectionLevel
 from google.cloud.location.locations_pb2 import ListLocationsRequest
 from google.cloud.resourcemanager import ProjectsClient
 from google.oauth2 import service_account
@@ -119,7 +119,9 @@ def get_public_key(key_version_name, service_account_file=None):
 @click.option("--x509-name", help="X.509 RFC4514 name string to embed within the CSR.", required=True)
 @click.option("--hash-function", help="Hash function to use: SHA256, SHA384, SHA512", required=False, default="SHA256")
 @click.option("--service-account-file", help="Path to the service account key JSON file.", required=False)
-def sign_csr(key_version_name, x509_name, hash_function, service_account_file=None):
+@click.option("--unsafe-dont-require-hsm-protection", help="Don\'t require that the key has 'HSM' protection level (may violate compliance).", type=bool, required=False, default=False)
+@click.option("--unsafe-allow-imported-key", help="Allow to use key that was imported from an external source (may violate compliance).", type=bool, required=False, default=False)
+def sign_csr(key_version_name, x509_name, hash_function, unsafe_dont_require_hsm_protection, unsafe_allow_imported_key, service_account_file=None):
     credentials = None
 
     if service_account_file:
@@ -139,6 +141,21 @@ def sign_csr(key_version_name, x509_name, hash_function, service_account_file=No
             quota_project_id=project_id
         )
     )
+
+    # we will do some basic compliance checks assuming that the user is expecting
+    # that his key is stored on HSM and was locally generated on the HSM
+    crypto_key = client.get_crypto_key_version(name=key_version_name)
+
+    if crypto_key.protection_level != ProtectionLevel.HSM and not unsafe_dont_require_hsm_protection:
+        raise ClickException(f"The specified CryptoKeyVersion has protection level {crypto_key.protection_level.name}"
+                             f" (expected: HSM). Double check if that meets your compliance requirements and if so, "
+                             f"repeat this command with '--unsafe-dont-require-hsm-protection' flag.")
+
+    if crypto_key.import_job and not unsafe_allow_imported_key:
+        raise ClickException(f"The specified CryptoKeyVersion was imported through an import job. "
+                             f"Double check if that meets your compliance requirements and if so, "
+                             f"repeat this command with '--unsafe-allow-imported-key' flag.")
+
     csr_pem = kms_sign_csr(
         client=client,
         key_version_name=key_version_name,
