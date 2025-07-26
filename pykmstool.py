@@ -119,8 +119,8 @@ def get_public_key(key_version_name, service_account_file=None):
 @click.option("--x509-name", help="X.509 RFC4514 name string to embed within the CSR.", required=True)
 @click.option("--hash-function", help="Hash function to use: SHA256, SHA384, SHA512", required=False, default="SHA256")
 @click.option("--service-account-file", help="Path to the service account key JSON file.", required=False)
-@click.option("--unsafe-dont-require-hsm-protection", help="Don\'t require that the key has 'HSM' protection level (may violate compliance).", type=bool, required=False, default=False)
-@click.option("--unsafe-allow-imported-key", help="Allow to use key that was imported from an external source (may violate compliance).", type=bool, required=False, default=False)
+@click.option("--unsafe-dont-require-hsm-protection", help="Don\'t require that the key has 'HSM' protection level (may violate compliance).", is_flag=True)
+@click.option("--unsafe-allow-imported-key", help="Allow to use key that was imported from an external source (may violate compliance).", is_flag=True)
 def sign_csr(key_version_name, x509_name, hash_function, unsafe_dont_require_hsm_protection, unsafe_allow_imported_key, service_account_file=None):
     credentials = None
 
