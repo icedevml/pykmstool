@@ -5,7 +5,7 @@
 ```
 docker run && \
    -v ./gcloud-config:/root/.config/gcloud && \
-   -it ghcr.io/icedevml/pykmstool:v2 && \
+   -it ghcr.io/icedevml/pykmstool:v1 && \
    sign-csr <... arguments ...>
 ```
 
