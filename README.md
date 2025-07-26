@@ -1,6 +1,17 @@
 # Google Cloud KMS Certificate Signing Request (CSR) Generation Tool
 
-## Usage
+## Docker usage
+
+```
+docker run && \
+   -v ./gcloud-config:/root/.config/gcloud && \
+   -it ghcr.io/icedevml/pykmstool:v2 && \
+   sign-csr <... arguments ...>
+```
+
+Remember to delete `./gcloud-config` directory after finishing work with the tool.
+
+## Classic usage
 
 ### Installation
 
@@ -14,14 +25,14 @@
 
 ### GCP Authentication
 
-Create application default credentials:
+1. Install the [gcloud CLI](https://cloud.google.com/sdk/docs/install)
+2. Create application default credentials:
+   ```
+   gcloud auth application-default login
+   ```
 
-```
-gcloud auth application-default login
-```
-
-Or alternatively you can manually specify a service account JSON key file by appending
-`--service-account-file path/to/credentials.json` to every command.
+   Or alternatively you can manually specify a service account JSON key file by appending
+   `--service-account-file path/to/credentials.json` to every `pykmstool` command in the further section.
 
 ### Tool usage
 
@@ -45,11 +56,3 @@ Listing all enabled key versions for a given location and/or project ID (only if
 ```
 python3 pykmstool.py list-key-versions --project-id example-project --location-id europe-west6 
 ```
-
-## Docker usage
-
-```
-docker run -v ./gcloud-config:/root/.config/gcloud -it ghcr.io/icedevml/pykmstool:v1 sign-csr <... arguments ...>
-```
-
-Remember to delete `./gcloud-config` directory after finishing work with the tool.
