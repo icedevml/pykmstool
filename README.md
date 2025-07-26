@@ -42,7 +42,13 @@ python3 pykmstool.py sign-csr \
     --x509-name "C=US,O=Example Corp,CN=example.com"
 ```
 
-See `--help` for all available parameters.
+Replace "US" with your two-letter country code, "Example Corp" with your organization name (company's name) and "example.com" with your company's domain.
+
+See `--help` for all other available parameters.
+
+> [!TIP]
+> EV Code Signing Certificate Authorities would usually not be very strict about the X.509 Name embedded inside the Certificate Signing Request.
+> If there were no special instructions about that provided by the CA, it should be fully sufficient to just set "C" (Country), "O" (Company name), "CN" (Company's domain) keys, just as in the example command provided above.
 
 #### Getting a PEM public key for given key version
 
