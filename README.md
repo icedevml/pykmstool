@@ -1,32 +1,5 @@
 # Google Cloud KMS Certificate Signing Request (CSR) Generation Tool
 
-## Docker usage
-
-### Executing commands
-
-```
-docker run \
-   -v ./gcloud-config:/root/.config/gcloud \
-   -it ghcr.io/icedevml/pykmstool:v3 \
-   -- \
-   sign-csr \
-   --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1 \
-   --x509-name "C=US,O=Example Corp,CN=example.com"
-```
-
-On the first run, this command will automatically lead you through the GCP sign in process.
-
-### Revoking authentication
-
-Remember to invalidate your credentials after finishing work with the tool, which could be done using:
-
-```
-docker run \
-   -v ./gcloud-config:/root/.config/gcloud \
-   -it ghcr.io/icedevml/pykmstool:v3 \
-   docker-revoke-credentials
-```
-
 ## Classic usage
 
 ### Installation
@@ -52,7 +25,11 @@ docker run \
 
 ### Tool usage
 
-Generating a CSR:
+#### Generating a CSR
+
+Generate and sign a CSR using a crypto key version specified by `--key-version-name` parameter.
+The name specified in the `--x509-name` parameter must be compliant with the [RFC4514](https://datatracker.ietf.org/doc/html/rfc4514)
+format and will be embedded within the resulting CSR.
 
 ```
 python3 pykmstool.py sign-csr \
@@ -60,15 +37,46 @@ python3 pykmstool.py sign-csr \
     --x509-name "C=US,O=Example Corp,CN=example.com"
 ```
 
-Getting a PEM public key for given key version:
+#### Getting a PEM public key for given key version
 
 ```
 python3 pykmstool.py get-public-key \
     --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1
 ```
 
-Listing all enabled key versions for a given location and/or project ID (only if the account has sufficient permissions to list resources):
+#### Listing all enabled key versions for a given location and/or project ID:
+
+Resources will be listed only if the account has sufficient permissions to list key rings, crypto keys, and crypto key versions.
 
 ```
 python3 pykmstool.py list-key-versions --project-id example-project --location-id europe-west6 
+```
+
+## Docker usage
+
+### Executing commands
+
+```
+docker run \
+   -v ./gcloud-config:/root/.config/gcloud \
+   -it ghcr.io/icedevml/pykmstool:v3 \
+   -- \
+   sign-csr \
+   --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1 \
+   --x509-name "C=US,O=Example Corp,CN=example.com"
+```
+
+On the first run, this command will automatically lead you through the GCP sign in process.
+
+See "Tool usage" section above for more information about supported commands.
+
+### Revoking authentication
+
+Remember to invalidate your credentials after finishing work with the tool, which could be done using:
+
+```
+docker run \
+   -v ./gcloud-config:/root/.config/gcloud \
+   -it ghcr.io/icedevml/pykmstool:v3 \
+   docker-revoke-credentials
 ```
