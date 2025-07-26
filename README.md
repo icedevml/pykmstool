@@ -2,14 +2,30 @@
 
 ## Docker usage
 
+### Executing commands
+
 ```
 docker run \
    -v ./gcloud-config:/root/.config/gcloud \
-   -it ghcr.io/icedevml/pykmstool:v2 \
-   sign-csr <... arguments ...>
+   -it ghcr.io/icedevml/pykmstool:v3 \
+   -- \
+   sign-csr \
+   --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1 \
+   --x509-name "C=US,O=Example Corp,CN=example.com"
 ```
 
-Remember to delete `./gcloud-config` directory after finishing work with the tool.
+On the first run, this command will automatically lead you through the GCP sign in process.
+
+### Revoking authentication
+
+Remember to invalidate your credentials after finishing work with the tool, which could be done using:
+
+```
+docker run \
+   -v ./gcloud-config:/root/.config/gcloud \
+   -it ghcr.io/icedevml/pykmstool:v3 \
+   docker-revoke-credentials
+```
 
 ## Classic usage
 
