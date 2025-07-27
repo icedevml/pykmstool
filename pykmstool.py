@@ -1,3 +1,8 @@
+"""
+icedevml/pykmstool - Google Cloud KMS Certificate Signing Request (CSR) Generation Tool
+BSD 3-Clause "New" License
+"""
+
 import click
 from click import ClickException
 from cryptography import x509

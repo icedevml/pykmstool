@@ -1,3 +1,11 @@
+"""
+icedevml/pykmstool - Google Cloud KMS Certificate Signing Request (CSR) Generation Tool
+BSD 3-Clause "New" License
+
+This code portion was inspired by https://github.com/reaperhulk/vault-signing
+Original license BSD-3-Clause (author: @reaperhulk)
+"""
+
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ed25519
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey

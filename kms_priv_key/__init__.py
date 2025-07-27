@@ -1,3 +1,8 @@
+"""
+icedevml/pykmstool - Google Cloud KMS Certificate Signing Request (CSR) Generation Tool
+BSD 3-Clause "New" License
+"""
+
 import typing
 
 from cryptography.hazmat.primitives.asymmetric import ec
