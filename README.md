@@ -108,7 +108,7 @@ python3 pykmstool.py list-key-versions --project-id example-project --location-i
 ```
 docker run \
    -v ./gcloud-config:/root/.config/gcloud \
-   -it ghcr.io/icedevml/pykmstool:v5 \
+   -it ghcr.io/icedevml/pykmstool:v6 \
    -- \
    sign-csr \
    --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1 \
@@ -126,6 +126,6 @@ Remember to invalidate your credentials after finishing work with the tool, whic
 ```
 docker run \
    -v ./gcloud-config:/root/.config/gcloud \
-   -it ghcr.io/icedevml/pykmstool:v5 \
+   -it ghcr.io/icedevml/pykmstool:v6 \
    docker-revoke-credentials
 ```
