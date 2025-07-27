@@ -7,7 +7,6 @@ from google.cloud import kms
 from google.cloud.kms_v1 import CryptoKeyVersion, ProtectionLevel
 from google.cloud.location.locations_pb2 import ListLocationsRequest
 from google.cloud.resourcemanager import ProjectsClient
-from google.oauth2 import service_account
 
 from kms_sign_csr import kms_sign_csr, kms_verify_csr, kms_get_public_key
 
@@ -42,17 +41,9 @@ def list_project_locations(client: kms.KeyManagementServiceClient, project_id: s
 @click.option("--service-account-file", help="Path to the service account key JSON file.", required=False)
 @click.option("--quota-project-id", help="Quota project ID, if it\'s different than the regular project ID.", required=False)
 def list_key_versions(location_id, project_id=None, service_account_file=None, quota_project_id=None):
-    if not quota_project_id:
-        quota_project_id = project_id
-
-    credentials = None
-
-    if service_account_file:
-        credentials = service_account.Credentials.from_service_account_file(service_account_file)
-
     kms_client = kms.KeyManagementServiceClient(
         client_options=ClientOptions(
-            credentials_file=credentials,
+            credentials_file=service_account_file,
             quota_project_id=quota_project_id
         )
     )
@@ -64,7 +55,7 @@ def list_key_versions(location_id, project_id=None, service_account_file=None, q
         check_project_ids.append(project_id)
     else:
         projects_client = ProjectsClient(client_options=ClientOptions(
-            credentials_file=credentials,
+            credentials_file=service_account_file,
             quota_project_id=quota_project_id
         )).search_projects()
 
@@ -102,24 +93,14 @@ def list_key_versions(location_id, project_id=None, service_account_file=None, q
 @click.option("--service-account-file", help="Path to the service account key JSON file.", required=False)
 @click.option("--quota-project-id", help="Quota project ID, if it\'s different than the project where the key version resource belongs to.", required=False)
 def get_public_key(key_version_name, service_account_file=None, quota_project_id=None):
-    credentials = None
-
-    if service_account_file:
-        credentials = service_account.Credentials.from_service_account_file(service_account_file)
-
     path_parsed = kms.KeyManagementServiceClient.parse_crypto_key_version_path(key_version_name)
 
     if not path_parsed:
         raise ClickException("Invalid --key-version-name parameter specified. Ensure it follows the pattern: projects/*/locations/*/keyRings/*/cryptoKeys/*/cryptoKeyVersions/*")
 
-    project_id = path_parsed["project"]
-
-    if not quota_project_id:
-        quota_project_id = project_id
-
     client = kms.KeyManagementServiceClient(
         client_options=ClientOptions(
-            credentials_file=credentials,
+            credentials_file=service_account_file,
             quota_project_id=quota_project_id
         )
     )
@@ -136,20 +117,10 @@ def get_public_key(key_version_name, service_account_file=None, quota_project_id
 @click.option("--unsafe-allow-imported-key", help="Allow to use key that was imported from an external source (may violate compliance).", is_flag=True)
 @click.option("--quota-project-id", help="Quota project ID, if it\'s different than the project where the key version resource belongs to.", required=False)
 def sign_csr(key_version_name, x509_name, unsafe_dont_require_hsm_protection, unsafe_allow_imported_key, service_account_file=None, quota_project_id=None):
-    credentials = None
-
-    if service_account_file:
-        credentials = service_account.Credentials.from_service_account_file(service_account_file)
-
     path_parsed = kms.KeyManagementServiceClient.parse_crypto_key_version_path(key_version_name)
 
     if not path_parsed:
         raise ClickException("Invalid --key-version-name parameter specified. Ensure it follows the pattern: projects/*/locations/*/keyRings/*/cryptoKeys/*/cryptoKeyVersions/*")
-
-    project_id = path_parsed["project"]
-
-    if not quota_project_id:
-        quota_project_id = project_id
 
     # unserialize and serialize to verify whether X.509 Name is correct
     try:
@@ -159,7 +130,7 @@ def sign_csr(key_version_name, x509_name, unsafe_dont_require_hsm_protection, un
 
     client = kms.KeyManagementServiceClient(
         client_options=ClientOptions(
-            credentials_file=credentials,
+            credentials_file=service_account_file,
             quota_project_id=quota_project_id
         )
     )
