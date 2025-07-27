@@ -191,7 +191,7 @@ class KMSEd25519PrivateKey(ed25519.Ed25519PrivateKey, BaseKMSPrivateKey):
         super().__init__(client, ckv, hash_algorithm=lambda: None)
 
     def __copy__(self) -> Ed25519PrivateKey:
-        pass
+        raise NotImplementedError()
 
     def public_key(self) -> Ed25519PublicKey:
         return self._common_public_key()
@@ -201,10 +201,10 @@ class KMSEd25519PrivateKey(ed25519.Ed25519PrivateKey, BaseKMSPrivateKey):
 
     def private_bytes(self, encoding: _serialization.Encoding, format: _serialization.PrivateFormat,
                       encryption_algorithm: _serialization.KeySerializationEncryption) -> bytes:
-        pass
+        raise NotImplementedError()
 
     def private_bytes_raw(self) -> bytes:
-        pass
+        raise NotImplementedError()
 
 
 def build_kms_priv_key(
