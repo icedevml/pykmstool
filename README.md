@@ -63,6 +63,17 @@ See `--help` for all other available parameters.
 > cloudkms.cryptoKeyVersions.viewPublicKey
 > cloudkms.cryptoKeyVersions.useToSign
 > ```
+> 
+> IAM Condition (optional)
+> ```
+> (
+>   resource.type == "cloudkms.googleapis.com/CryptoKey" &&
+>   resource.name == "projects/{projectName}/locations/{location}/keyRings/{keyRingName}/cryptoKeys/{keyName}"
+> ) || (
+>   resource.type == "cloudkms.googleapis.com/CryptoKeyVersion" &&
+>   resource.name.startsWith("projects/{projectName}/locations/{location}/keyRings/{keyRingName}/cryptoKeys/{keyName}/cryptoKeyVersions/"
+> )
+> ```
 
 > [!TIP]
 > EV Code Signing Certificate Authorities would usually not be very strict about the X.509 Name embedded inside the Certificate Signing Request.
@@ -80,6 +91,17 @@ python3 pykmstool.py get-public-key \
 > ```
 > cloudkms.cryptoKeyVersions.get
 > cloudkms.cryptoKeyVersions.viewPublicKey
+> ```
+> 
+> IAM Condition (optional)
+> ```
+> (
+>   resource.type == "cloudkms.googleapis.com/CryptoKey" &&
+>   resource.name == "projects/{projectName}/locations/{location}/keyRings/{keyRingName}/cryptoKeys/{keyName}"
+> ) || (
+>   resource.type == "cloudkms.googleapis.com/CryptoKeyVersion" &&
+>   resource.name.startsWith("projects/{projectName}/locations/{location}/keyRings/{keyRingName}/cryptoKeys/{keyName}/cryptoKeyVersions/"
+> )
 > ```
 
 #### Listing all enabled key versions for a given location and/or project ID:
