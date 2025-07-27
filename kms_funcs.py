@@ -1,3 +1,8 @@
+"""
+icedevml/pykmstool - Google Cloud KMS Certificate Signing Request (CSR) Generation Tool
+BSD 3-Clause "New" License
+"""
+
 from cryptography import x509
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat

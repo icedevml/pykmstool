@@ -1,5 +1,8 @@
 """
-Modified from https://github.com/reaperhulk/vault-signing
+icedevml/pykmstool - Google Cloud KMS Certificate Signing Request (CSR) Generation Tool
+BSD 3-Clause "New" License
+
+This code portion was inspired by https://github.com/reaperhulk/vault-signing
 Original license BSD-3-Clause (author: @reaperhulk)
 """
 
