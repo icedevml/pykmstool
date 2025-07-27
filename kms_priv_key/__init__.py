@@ -11,11 +11,13 @@ from kms_priv_key.key_ed25519 import KMSEd25519PrivateKey
 from kms_priv_key.key_rsa import KMSRSAPrivateKey
 
 
+type KMSPrivateKey = KMSRSAPrivateKey | KMSECPrivateKey | KMSEd25519PrivateKey
+
 def build_kms_priv_key(
-        cls: typing.Type[KMSRSAPrivateKey | KMSECPrivateKey | KMSEd25519PrivateKey],
+        cls: typing.Type[KMSPrivateKey],
         hash_algorithm: KMSHashAlgorithm = None,
         curve: typing.Type[EllipticCurve] = None,
-) -> typing.Callable[..., KMSRSAPrivateKey | KMSECPrivateKey | KMSEd25519PrivateKey]:
+) -> typing.Callable[..., KMSPrivateKey]:
     bind_kwargs = {}
 
     if hash_algorithm:
@@ -28,7 +30,7 @@ def build_kms_priv_key(
 
 
 def create_pyca_private_key(client: KeyManagementServiceClient, key_version_name: str)\
-        -> KMSRSAPrivateKey | KMSECPrivateKey | KMSEd25519PrivateKey:
+        -> KMSPrivateKey:
     kms_alg_to_class = {
         CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PKCS1_2048_SHA256.name:
             build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256),
