@@ -92,17 +92,6 @@ python3 pykmstool.py get-public-key \
 > cloudkms.cryptoKeyVersions.get
 > cloudkms.cryptoKeyVersions.viewPublicKey
 > ```
-> 
-> IAM Condition (optional)
-> ```
-> (
->   resource.type == "cloudkms.googleapis.com/CryptoKey" &&
->   resource.name == "projects/{projectName}/locations/{location}/keyRings/{keyRingName}/cryptoKeys/{keyName}"
-> ) || (
->   resource.type == "cloudkms.googleapis.com/CryptoKeyVersion" &&
->   resource.name.startsWith("projects/{projectName}/locations/{location}/keyRings/{keyRingName}/cryptoKeys/{keyName}/cryptoKeyVersions/"
-> )
-> ```
 
 #### Listing all enabled key versions for a given location and/or project ID:
 
