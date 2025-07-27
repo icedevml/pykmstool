@@ -35,7 +35,7 @@
 > `--service-account-file path/to/credentials.json` to every `pykmstool` command invocation in the further section.
 
 > [!TIP]
-> If your quota project is different than the project where your KMS keys are, please append `--quota-project-id <...>`
+> If you need to specify quota project to use, please append `--quota-project-id <...>`
 > on every invocation of `pykmstool` commands listed in the further section.
 
 ### Tool usage
@@ -56,6 +56,14 @@ Replace "US" with your two-letter country code, "Example Corp" with your organiz
 
 See `--help` for all other available parameters.
 
+> [!NOTE]
+> Required GCP IAM permissions:
+> ```
+> cloudkms.cryptoKeyVersions.get
+> cloudkms.cryptoKeyVersions.viewPublicKey
+> cloudkms.cryptoKeyVersions.useToSign
+> ```
+
 > [!TIP]
 > EV Code Signing Certificate Authorities would usually not be very strict about the X.509 Name embedded inside the Certificate Signing Request.
 > If there were no special instructions about that provided by the CA, it should be fully sufficient to just set "C" (Country), "O" (Company name), "CN" (Company's domain) keys, just as in the example command provided above.
@@ -67,6 +75,13 @@ python3 pykmstool.py get-public-key \
     --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1
 ```
 
+> [!NOTE]
+> Required GCP IAM permissions:
+> ```
+> cloudkms.cryptoKeyVersions.get
+> cloudkms.cryptoKeyVersions.viewPublicKey
+> ```
+
 #### Listing all enabled key versions for a given location and/or project ID:
 
 Resources will be listed only if the account has sufficient permissions to list key rings, crypto keys, and crypto key versions.
@@ -74,6 +89,14 @@ Resources will be listed only if the account has sufficient permissions to list 
 ```
 python3 pykmstool.py list-key-versions --project-id example-project --location-id europe-west6 
 ```
+
+> [!NOTE]
+> Required GCP IAM permissions (assuming that both `--location-id` and `--project-id` are provided):
+> ```
+> cloudkms.keyRings.list
+> cloudkms.cryptoKeys.list	
+> cloudkms.cryptoKeyVersions.list	
+> ```
 
 ## Docker usage
 
