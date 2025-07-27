@@ -1,5 +1,15 @@
 # Google Cloud KMS Certificate Signing Request (CSR) Generation Tool
 
+## Features
+
+* List KMS key resource names within a specified region ID and/or project ID.
+* Get PEM-encoded public key for a given KMS key.
+* Generate CSR and sign it using KMS key.
+  * Supports RSA (2048-4096, SHA256/SHA512), ECDSA (P-256, P-384, Secp256k1) and Ed25519 keys.
+  * Automatically warns about possible compliance issues if the specified key is not HSM-protected or was imported
+    (can be bypassed).
+  * Subject X.509 name in the CSR is customized using RFC4514 string provided by the user.
+
 ## Classic usage
 
 ### Installation
