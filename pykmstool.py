@@ -27,7 +27,6 @@ def list_project_locations(client: kms.KeyManagementServiceClient, project_id: s
     while True:
         res = client.list_locations(ListLocationsRequest(
             name=f'projects/{project_id}',
-            page_size=3,
             page_token=next_page_token
         ))
 
@@ -44,7 +43,7 @@ def list_project_locations(client: kms.KeyManagementServiceClient, project_id: s
 @click.option(
     "--location-id",
     help="Location ID to search for KMS keys within.",
-    required=True)
+    required=False)
 @click.option(
     "--project-id",
     help="Project ID to search for KMS keys within. Will check all projects otherwise.",
@@ -88,6 +87,7 @@ def list_key_versions(location_id, project_id=None, service_account_file=None, q
 
     for project_id in check_project_ids:
         for location_id in check_location_ids:
+            click.echo(f'# Checking projects/{project_id}/locations/{location_id}')
             location_path = kms_client.common_location_path(project_id, location_id)
             try:
                 for key_ring in kms_client.list_key_rings(parent=location_path):
