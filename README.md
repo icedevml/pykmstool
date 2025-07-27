@@ -63,7 +63,8 @@ See `--help` for all other available parameters.
 > cloudkms.cryptoKeyVersions.viewPublicKey
 > cloudkms.cryptoKeyVersions.useToSign
 > ```
-> 
+
+> [!NOTE]
 > IAM Condition to scope those permissions to a single key (optional):
 > ```
 > (
