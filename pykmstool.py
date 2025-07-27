@@ -8,7 +8,7 @@ from google.cloud.kms_v1 import CryptoKeyVersion, ProtectionLevel
 from google.cloud.location.locations_pb2 import ListLocationsRequest
 from google.cloud.resourcemanager import ProjectsClient
 
-from kms_sign_csr import kms_sign_csr, kms_verify_csr, kms_get_public_key
+from kms_funcs import kms_sign_csr, kms_verify_csr, kms_get_public_key
 
 
 @click.group()
@@ -36,10 +36,22 @@ def list_project_locations(client: kms.KeyManagementServiceClient, project_id: s
 
 
 @cli.command(help="List enabled CryptoKeyVersions within a specified location ID and/or project ID.")
-@click.option("--location-id", help="Location ID to search for KMS keys within.", required=True)
-@click.option("--project-id", help="Project ID to search for KMS keys within. Will check all projects otherwise.", required=False)
-@click.option("--service-account-file", help="Path to the service account key JSON file.", required=False)
-@click.option("--quota-project-id", help="Quota project ID, if it\'s different than the regular project ID.", required=False)
+@click.option(
+    "--location-id",
+    help="Location ID to search for KMS keys within.",
+    required=True)
+@click.option(
+    "--project-id",
+    help="Project ID to search for KMS keys within. Will check all projects otherwise.",
+    required=False)
+@click.option(
+    "--service-account-file",
+    help="Path to the service account key JSON file.",
+    required=False)
+@click.option(
+    "--quota-project-id",
+    help="Quota project ID.",
+    required=False)
 def list_key_versions(location_id, project_id=None, service_account_file=None, quota_project_id=None):
     kms_client = kms.KeyManagementServiceClient(
         client_options=ClientOptions(
@@ -89,14 +101,24 @@ def list_key_versions(location_id, project_id=None, service_account_file=None, q
 
 
 @cli.command(help="Retrieve a PEM encoded public key for given CryptoKeyVersion resource name.")
-@click.option("--key-version-name", help="Resource name of the CryptoKeyVersion to use.", required=True)
-@click.option("--service-account-file", help="Path to the service account key JSON file.", required=False)
-@click.option("--quota-project-id", help="Quota project ID, if it\'s different than the project where the key version resource belongs to.", required=False)
+@click.option(
+    "--key-version-name",
+    help="Resource name of the CryptoKeyVersion to use.",
+    required=True)
+@click.option(
+    "--service-account-file",
+    help="Path to the service account key JSON file.",
+    required=False)
+@click.option(
+    "--quota-project-id",
+    help="Quota project ID.",
+    required=False)
 def get_public_key(key_version_name, service_account_file=None, quota_project_id=None):
     path_parsed = kms.KeyManagementServiceClient.parse_crypto_key_version_path(key_version_name)
 
     if not path_parsed:
-        raise ClickException("Invalid --key-version-name parameter specified. Ensure it follows the pattern: projects/*/locations/*/keyRings/*/cryptoKeys/*/cryptoKeyVersions/*")
+        raise ClickException("Invalid --key-version-name parameter specified. Ensure it follows the "
+                             "pattern: projects/*/locations/*/keyRings/*/cryptoKeys/*/cryptoKeyVersions/*")
 
     client = kms.KeyManagementServiceClient(
         client_options=ClientOptions(
@@ -113,14 +135,31 @@ def get_public_key(key_version_name, service_account_file=None, quota_project_id
 @click.option("--key-version-name", help="Resource name of the CryptoKeyVersion to use.", required=True)
 @click.option("--x509-name", help="X.509 RFC4514 name string to embed within the CSR.", required=True)
 @click.option("--service-account-file", help="Path to the service account key JSON file.", required=False)
-@click.option("--unsafe-dont-require-hsm-protection", help="Don\'t require that the key has 'HSM' protection level (may violate compliance).", is_flag=True)
-@click.option("--unsafe-allow-imported-key", help="Allow to use key that was imported from an external source (may violate compliance).", is_flag=True)
-@click.option("--quota-project-id", help="Quota project ID, if it\'s different than the project where the key version resource belongs to.", required=False)
-def sign_csr(key_version_name, x509_name, unsafe_dont_require_hsm_protection, unsafe_allow_imported_key, service_account_file=None, quota_project_id=None):
+@click.option(
+    "--unsafe-dont-require-hsm-protection",
+    help="Don\'t require that the key has 'HSM' protection level (may violate compliance).",
+    is_flag=True)
+@click.option(
+    "--unsafe-allow-imported-key",
+    help="Allow to use key that was imported from an external source (may violate compliance).",
+    is_flag=True)
+@click.option(
+    "--quota-project-id",
+    help="Quota project ID.",
+    required=False)
+def sign_csr(
+        key_version_name,
+        x509_name,
+        unsafe_dont_require_hsm_protection,
+        unsafe_allow_imported_key,
+        service_account_file=None,
+        quota_project_id=None
+):
     path_parsed = kms.KeyManagementServiceClient.parse_crypto_key_version_path(key_version_name)
 
     if not path_parsed:
-        raise ClickException("Invalid --key-version-name parameter specified. Ensure it follows the pattern: projects/*/locations/*/keyRings/*/cryptoKeys/*/cryptoKeyVersions/*")
+        raise ClickException("Invalid --key-version-name parameter specified. Ensure it follows the "
+                             "pattern: projects/*/locations/*/keyRings/*/cryptoKeys/*/cryptoKeyVersions/*")
 
     # unserialize and serialize to verify whether X.509 Name is correct
     try:

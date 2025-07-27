@@ -9,7 +9,10 @@ from kms_priv_key import create_pyca_private_key
 
 def kms_get_public_key(*, client: kms.KeyManagementServiceClient, key_version_name: str) -> str:
     signer_priv_key = create_pyca_private_key(client, key_version_name)
-    return signer_priv_key.public_key().public_bytes(encoding=Encoding.PEM, format=PublicFormat.SubjectPublicKeyInfo).decode('ascii')
+    return signer_priv_key.public_key().public_bytes(
+        encoding=Encoding.PEM,
+        format=PublicFormat.SubjectPublicKeyInfo
+    ).decode('ascii')
 
 
 def kms_sign_csr(*, client: kms.KeyManagementServiceClient, key_version_name: str, rfc4514_name: str) -> str:
@@ -26,7 +29,13 @@ def kms_sign_csr(*, client: kms.KeyManagementServiceClient, key_version_name: st
     return cert.public_bytes(serialization.Encoding.PEM).decode('ascii')
 
 
-def kms_verify_csr(*, client: kms.KeyManagementServiceClient, key_version_name: str, csr_pem: str, expected_rfc4514_name: str):
+def kms_verify_csr(
+        *,
+        client: kms.KeyManagementServiceClient,
+        key_version_name: str,
+        csr_pem: str,
+        expected_rfc4514_name: str
+):
     signer_priv_key = create_pyca_private_key(client, key_version_name)
 
     csr = load_pem_x509_csr(csr_pem.encode('ascii'))
