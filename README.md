@@ -95,12 +95,19 @@ python3 pykmstool.py get-public-key \
 > cloudkms.cryptoKeyVersions.viewPublicKey
 > ```
 
-#### Listing all enabled key versions for a given location and/or project ID:
+#### Listing all enabled key versions globally or for a given location/project ID:
 
-Resources will be listed only if the account has sufficient permissions to list key rings, crypto keys, and crypto key versions.
+Resources will be listed only if the account has sufficient permissions to list resources.
 
 ```
-python3 pykmstool.py list-key-versions --project-id example-project --location-id europe-west6 
+# Only search within a specified project and location ID
+python3 pykmstool.py list-key-versions --project-id example-project --location-id europe-west6
+# Search within a given location throughout all available projects
+python3 pykmstool.py list-key-versions --location-id europe-west6
+# Search within a project throughout all possible locations (slow)
+python3 pykmstool.py list-key-versions --project-id example-project
+# Search globally (slow)
+python3 pykmstool.py list-key-versions
 ```
 
 > [!NOTE]
