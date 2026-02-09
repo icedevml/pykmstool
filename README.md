@@ -14,13 +14,9 @@
 
 ### Installation
 
-1. Clone this repository.
-2. Create a virtual environment and install required dependencies:
-    ```
-    python3 -m venv venv
-    source venv/bin/activate
-    pip3 install -r requirements.txt
-    ```
+```
+pip3 install pykmstool
+```
 
 ### GCP Authentication
 
@@ -47,7 +43,7 @@ The name specified in the `--x509-name` parameter must be compliant with the [RF
 format and will be embedded within the resulting CSR.
 
 ```
-python3 pykmstool.py sign-csr \
+pykmstool sign-csr \
     --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1 \
     --x509-name "C=US,O=Example Corp,CN=example.com"
 ```
@@ -84,7 +80,7 @@ See `--help` for all other available parameters.
 #### Getting a PEM public key for given key version
 
 ```
-python3 pykmstool.py get-public-key \
+pykmstool get-public-key \
     --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1
 ```
 
@@ -101,13 +97,13 @@ Resources will be listed only if the account has sufficient permissions to list 
 
 ```
 # Only search within a specified project and location ID
-python3 pykmstool.py list-key-versions --project-id example-project --location-id europe-west6
+pykmstool list-key-versions --project-id example-project --location-id europe-west6
 # Search within a given location throughout all available projects
-python3 pykmstool.py list-key-versions --location-id europe-west6
+pykmstool list-key-versions --location-id europe-west6
 # Search within a project throughout all possible locations (slow)
-python3 pykmstool.py list-key-versions --project-id example-project
+pykmstool list-key-versions --project-id example-project
 # Search globally (slow)
-python3 pykmstool.py list-key-versions
+pykmstool list-key-versions
 ```
 
 > [!NOTE]
@@ -117,6 +113,9 @@ python3 pykmstool.py list-key-versions
 > cloudkms.cryptoKeys.list	
 > cloudkms.cryptoKeyVersions.list	
 > ```
+
+## Library usage
+See [src/pykmstool/kms_funcs.py](https://github.com/icedevml/pykmstool/tree/master/src/pykmstool/kms_funcs.py) for available functions.
 
 ## Docker usage
 
@@ -128,7 +127,7 @@ python3 pykmstool.py list-key-versions
 ```
 docker run \
    -v ./gcloud-config:/root/.config/gcloud \
-   -it ghcr.io/icedevml/pykmstool:v9 \
+   -it ghcr.io/icedevml/pykmstool:v2.0.0 \
    -- \
    sign-csr \
    --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1 \
@@ -146,6 +145,6 @@ Remember to invalidate your credentials after finishing work with the tool, whic
 ```
 docker run \
    -v ./gcloud-config:/root/.config/gcloud \
-   -it ghcr.io/icedevml/pykmstool:v9 \
+   -it ghcr.io/icedevml/pykmstool:v2.0.0 \
    docker-revoke-credentials
 ```

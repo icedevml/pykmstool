@@ -1,5 +1,0 @@
-cryptography==45.0.5
-google-cloud-resource-manager==1.14.2
-google-cloud-kms==3.5.1
-crcmod==1.7
-click==8.2.1

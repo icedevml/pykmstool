@@ -15,7 +15,7 @@ from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurveSignatureA
     EllipticCurvePublicKey, EllipticCurvePrivateKey, EllipticCurvePrivateNumbers
 from google.cloud.kms_v1 import KeyManagementServiceClient, CryptoKeyVersion
 
-from kms_priv_key.base_key import BaseKMSPrivateKey, KMSHashAlgorithm
+from pykmstool.kms_priv_key.base_key import BaseKMSPrivateKey, KMSHashAlgorithm
 
 
 class KMSECPrivateKey(ec.EllipticCurvePrivateKey, BaseKMSPrivateKey):

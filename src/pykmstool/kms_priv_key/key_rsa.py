@@ -18,7 +18,7 @@ from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey, RSAPublicKey
 from google.cloud.kms_v1 import KeyManagementServiceClient, CryptoKeyVersion
 
-from kms_priv_key.base_key import BaseKMSPrivateKey, KMSHashAlgorithm
+from pykmstool.kms_priv_key.base_key import BaseKMSPrivateKey, KMSHashAlgorithm
 
 
 class KMSRSAPrivateKey(rsa.RSAPrivateKey, BaseKMSPrivateKey):

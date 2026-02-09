@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 from cryptography.x509 import load_pem_x509_csr
 from google.cloud import kms
 
-from kms_priv_key import create_pyca_private_key
+from pykmstool.kms_priv_key import create_pyca_private_key
 
 
 def kms_get_public_key(*, client: kms.KeyManagementServiceClient, key_version_name: str) -> str:

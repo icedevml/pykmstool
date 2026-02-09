@@ -13,7 +13,7 @@ from google.cloud.kms_v1 import CryptoKeyVersion, ProtectionLevel
 from google.cloud.location.locations_pb2 import ListLocationsRequest
 from google.cloud.resourcemanager import ProjectsClient
 
-from kms_funcs import kms_sign_csr, kms_verify_csr, kms_get_public_key
+from pykmstool.kms_funcs import kms_sign_csr, kms_verify_csr, kms_get_public_key
 
 
 @click.group()

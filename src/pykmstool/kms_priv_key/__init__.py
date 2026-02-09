@@ -10,10 +10,10 @@ from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurve
 from cryptography.hazmat.primitives.hashes import SHA256, SHA384, SHA512
 from google.cloud.kms_v1 import KeyManagementServiceClient, CryptoKeyVersion
 
-from kms_priv_key.base_key import KMSHashAlgorithm
-from kms_priv_key.key_ec import KMSECPrivateKey
-from kms_priv_key.key_ed25519 import KMSEd25519PrivateKey
-from kms_priv_key.key_rsa import KMSRSAPrivateKey
+from pykmstool.kms_priv_key.base_key import KMSHashAlgorithm
+from pykmstool.kms_priv_key.key_ec import KMSECPrivateKey
+from pykmstool.kms_priv_key.key_ed25519 import KMSEd25519PrivateKey
+from pykmstool.kms_priv_key.key_rsa import KMSRSAPrivateKey
 
 
 type KMSPrivateKey = KMSRSAPrivateKey | KMSECPrivateKey | KMSEd25519PrivateKey

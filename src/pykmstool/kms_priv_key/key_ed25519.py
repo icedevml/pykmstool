@@ -12,7 +12,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey,
 from cryptography.utils import Buffer
 from google.cloud.kms_v1 import KeyManagementServiceClient, CryptoKeyVersion
 
-from kms_priv_key.base_key import BaseKMSPrivateKey
+from pykmstool.kms_priv_key.base_key import BaseKMSPrivateKey
 
 
 class KMSEd25519PrivateKey(ed25519.Ed25519PrivateKey, BaseKMSPrivateKey):
