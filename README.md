@@ -14,6 +14,8 @@
 
 ### Installation
 
+Package available on [PyPi](https://pypi.org/project/pykmstool/):
+
 ```
 pip3 install pykmstool
 ```
@@ -26,12 +28,10 @@ pip3 install pykmstool
    gcloud auth application-default login
    ```
 
-> [!TIP]
-> Alternatively, you can manually specify a service account JSON key file by appending
+> **Tip:** Alternatively, you can manually specify a service account JSON key file by appending
 > `--service-account-file path/to/credentials.json` to every `pykmstool` command invocation in the further section.
 
-> [!TIP]
-> If you need to specify quota project to use, please append `--quota-project-id <...>`
+> **Tip:** If you need to specify quota project to use, please append `--quota-project-id <...>`
 > on every invocation of `pykmstool` commands listed in the further section.
 
 ### Tool usage
@@ -52,16 +52,14 @@ Replace "US" with your two-letter country code, "Example Corp" with your organiz
 
 See `--help` for all other available parameters.
 
-> [!NOTE]
-> Required GCP IAM permissions:
+> **Note:** Required GCP IAM permissions:
 > ```
 > cloudkms.cryptoKeyVersions.get
 > cloudkms.cryptoKeyVersions.viewPublicKey
 > cloudkms.cryptoKeyVersions.useToSign
 > ```
 
-> [!NOTE]
-> IAM Condition to scope those permissions to a single key (optional):
+> **Note:** IAM Condition to scope those permissions to a single key (optional):
 > ```
 > (
 >   resource.type == "cloudkms.googleapis.com/CryptoKey" &&
@@ -73,8 +71,7 @@ See `--help` for all other available parameters.
 > ```
 > Substitute `{...}` placeholders with appropriate names.
 
-> [!TIP]
-> EV Code Signing Certificate Authorities would usually not be very strict about the X.509 Name embedded inside the Certificate Signing Request.
+> **Tip:** EV Code Signing Certificate Authorities would usually not be very strict about the X.509 Name embedded inside the Certificate Signing Request.
 > If there were no special instructions about that provided by the CA, it should be fully sufficient to just set "C" (Country), "O" (Company name), "CN" (Company's domain) keys, just as in the example command provided above.
 
 #### Getting a PEM public key for given key version
@@ -84,8 +81,7 @@ pykmstool get-public-key \
     --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1
 ```
 
-> [!NOTE]
-> Required GCP IAM permissions:
+> **Note:** Required GCP IAM permissions:
 > ```
 > cloudkms.cryptoKeyVersions.get
 > cloudkms.cryptoKeyVersions.viewPublicKey
@@ -106,8 +102,7 @@ pykmstool list-key-versions --project-id example-project
 pykmstool list-key-versions
 ```
 
-> [!NOTE]
-> Required GCP IAM permissions (assuming that both `--location-id` and `--project-id` are provided):
+> **Note:** Required GCP IAM permissions (assuming that both `--location-id` and `--project-id` are provided):
 > ```
 > cloudkms.keyRings.list
 > cloudkms.cryptoKeys.list	
@@ -119,8 +114,8 @@ See [src/pykmstool/kms_funcs.py](https://github.com/icedevml/pykmstool/tree/mast
 
 ## Docker usage
 
-> [!TIP]
-> With the Docker flow, you don't need to perform "Installation" and "GCP Authentication" steps listed above. The Docker version will automatically lead you through those processes.
+> **Tip:** With the Docker flow, you don't need to perform "Installation" and "GCP Authentication" steps listed above.
+> The Docker version will automatically lead you through those processes.
 
 ### Executing commands
 
