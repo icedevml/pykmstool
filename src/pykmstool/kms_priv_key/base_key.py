@@ -18,8 +18,6 @@ from cryptography.hazmat.primitives.hashes import SHA256, SHA384, SHA512
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 from google.cloud.kms_v1 import KeyManagementServiceClient, CryptoKeyVersion
 
-type KMSHashAlgorithm = typing.Type[SHA256 | SHA384 | SHA512]
-
 def crc32c(data: bytes) -> int:
     import crcmod  # type: ignore
 
@@ -32,7 +30,7 @@ class BaseKMSPrivateKey:
             self,
             client: KeyManagementServiceClient,
             ckv: CryptoKeyVersion,
-            hash_algorithm: KMSHashAlgorithm | typing.Callable[[], None]
+            hash_algorithm: typing.Type[SHA256 | SHA384 | SHA512] | typing.Callable[[], None]
     ):
         self._client = client
         self._ckv = ckv
@@ -43,7 +41,7 @@ class BaseKMSPrivateKey:
         return self._ckv
 
     @property
-    def hash_algorithm(self) -> KMSHashAlgorithm:
+    def hash_algorithm(self) -> typing.Type[SHA256 | SHA384 | SHA512]:
         return self._hash_algorithm
 
     def _common_public_key(self):

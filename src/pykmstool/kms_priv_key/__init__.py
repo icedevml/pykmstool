@@ -10,19 +10,16 @@ from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurve
 from cryptography.hazmat.primitives.hashes import SHA256, SHA384, SHA512
 from google.cloud.kms_v1 import KeyManagementServiceClient, CryptoKeyVersion
 
-from pykmstool.kms_priv_key.base_key import KMSHashAlgorithm
 from pykmstool.kms_priv_key.key_ec import KMSECPrivateKey
 from pykmstool.kms_priv_key.key_ed25519 import KMSEd25519PrivateKey
 from pykmstool.kms_priv_key.key_rsa import KMSRSAPrivateKey
 
 
-type KMSPrivateKey = KMSRSAPrivateKey | KMSECPrivateKey | KMSEd25519PrivateKey
-
 def build_kms_priv_key(
-        cls: typing.Type[KMSPrivateKey],
-        hash_algorithm: KMSHashAlgorithm = None,
+        cls: typing.Type[KMSRSAPrivateKey | KMSECPrivateKey | KMSEd25519PrivateKey],
+        hash_algorithm: typing.Type[SHA256 | SHA384 | SHA512] = None,
         curve: typing.Type[EllipticCurve] = None,
-) -> typing.Callable[..., KMSPrivateKey]:
+) -> typing.Callable[..., KMSRSAPrivateKey | KMSECPrivateKey | KMSEd25519PrivateKey]:
     bind_kwargs = {}
 
     if hash_algorithm:
@@ -35,7 +32,7 @@ def build_kms_priv_key(
 
 
 def create_pyca_private_key(client: KeyManagementServiceClient, key_version_name: str)\
-        -> KMSPrivateKey:
+        -> KMSRSAPrivateKey | KMSECPrivateKey | KMSEd25519PrivateKey:
     kms_alg_to_class = {
         CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PKCS1_2048_SHA256.name:
             build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256),
