@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pykmstool"
-version = "2.0.1"
+version = "2.0.2"
 description = "Google Cloud KMS Certificate Signing Request (CSR) Generation Tool"
 readme = "README.md"
 authors = [
