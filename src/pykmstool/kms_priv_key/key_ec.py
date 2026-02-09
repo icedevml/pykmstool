@@ -13,9 +13,10 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurveSignatureAlgorithm, EllipticCurve, ECDH, \
     EllipticCurvePublicKey, EllipticCurvePrivateKey, EllipticCurvePrivateNumbers
+from cryptography.hazmat.primitives.hashes import SHA256, SHA384, SHA512
 from google.cloud.kms_v1 import KeyManagementServiceClient, CryptoKeyVersion
 
-from pykmstool.kms_priv_key.base_key import BaseKMSPrivateKey, KMSHashAlgorithm
+from pykmstool.kms_priv_key.base_key import BaseKMSPrivateKey
 
 
 class KMSECPrivateKey(ec.EllipticCurvePrivateKey, BaseKMSPrivateKey):
@@ -23,7 +24,7 @@ class KMSECPrivateKey(ec.EllipticCurvePrivateKey, BaseKMSPrivateKey):
             self,
             client: KeyManagementServiceClient,
             ckv: CryptoKeyVersion,
-            hash_algorithm: KMSHashAlgorithm,
+            hash_algorithm: typing.Type[SHA256 | SHA384 | SHA512],
             curve: typing.Type[ec.EllipticCurve]
     ):
         super().__init__(client, ckv, hash_algorithm)
@@ -44,7 +45,7 @@ class KMSECPrivateKey(ec.EllipticCurvePrivateKey, BaseKMSPrivateKey):
         return self._common_sign(data, signature_algorithm.algorithm)
 
     @property
-    def hash_algorithm(self) -> KMSHashAlgorithm:
+    def hash_algorithm(self) -> typing.Type[SHA256 | SHA384 | SHA512]:
         return self._hash_algorithm
 
     @property

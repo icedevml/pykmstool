@@ -16,13 +16,14 @@ from cryptography.hazmat.primitives.asymmetric import (
 from cryptography.hazmat.primitives.asymmetric.padding import AsymmetricPadding
 from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey, RSAPublicKey
+from cryptography.hazmat.primitives.hashes import SHA256, SHA384, SHA512
 from google.cloud.kms_v1 import KeyManagementServiceClient, CryptoKeyVersion
 
-from pykmstool.kms_priv_key.base_key import BaseKMSPrivateKey, KMSHashAlgorithm
+from pykmstool.kms_priv_key.base_key import BaseKMSPrivateKey
 
 
 class KMSRSAPrivateKey(rsa.RSAPrivateKey, BaseKMSPrivateKey):
-    def __init__(self, client: KeyManagementServiceClient, ckv: CryptoKeyVersion, hash_algorithm: KMSHashAlgorithm):
+    def __init__(self, client: KeyManagementServiceClient, ckv: CryptoKeyVersion, hash_algorithm: typing.Type[SHA256 | SHA384 | SHA512]):
         super().__init__(client, ckv, hash_algorithm)
 
     def __copy__(self) -> RSAPrivateKey:
