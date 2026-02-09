@@ -122,7 +122,7 @@ See [src/pykmstool/kms_funcs.py](https://github.com/icedevml/pykmstool/tree/mast
 ```
 docker run \
    -v ./gcloud-config:/root/.config/gcloud \
-   -it ghcr.io/icedevml/pykmstool:v2.0.0 \
+   -it ghcr.io/icedevml/pykmstool:v2.0.2 \
    -- \
    sign-csr \
    --key-version-name projects/example-project/locations/europe-west6/keyRings/ExampleKeyRing/cryptoKeys/ExampleRSAKey1/cryptoKeyVersions/1 \
@@ -140,6 +140,6 @@ Remember to invalidate your credentials after finishing work with the tool, whic
 ```
 docker run \
    -v ./gcloud-config:/root/.config/gcloud \
-   -it ghcr.io/icedevml/pykmstool:v2.0.0 \
+   -it ghcr.io/icedevml/pykmstool:v2.0.2 \
    docker-revoke-credentials
 ```
