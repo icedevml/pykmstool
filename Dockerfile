@@ -1,4 +1,4 @@
-FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:555.0.0-slim
+FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:565.0.0-slim
 
 RUN apt-get update && \
     apt-get install -y python3-venv && \
