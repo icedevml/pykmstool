@@ -21,7 +21,7 @@ class KMSEd25519PrivateKey(ed25519.Ed25519PrivateKey, BaseKMSPrivateKey):
             client: KeyManagementServiceClient,
             ckv: CryptoKeyVersion
     ):
-        super().__init__(client, ckv, hash_algorithm=lambda: None)
+        super().__init__(client, ckv, hash_algorithm=lambda: None, rsa_padding=lambda _: None)
 
     def __copy__(self) -> Ed25519PrivateKey:
         return KMSEd25519PrivateKey(
@@ -33,7 +33,7 @@ class KMSEd25519PrivateKey(ed25519.Ed25519PrivateKey, BaseKMSPrivateKey):
         return self._common_public_key()
 
     def sign(self, data: Buffer) -> bytes:
-        return self._common_sign(data, algorithm=lambda: None)
+        return self._common_sign(data)
 
     def private_bytes(self, encoding: serialization.Encoding, format: serialization.PrivateFormat,
                       encryption_algorithm: serialization.KeySerializationEncryption) -> bytes:
