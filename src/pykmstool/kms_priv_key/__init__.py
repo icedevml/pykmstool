@@ -43,6 +43,15 @@ def create_pyca_private_key(client: KeyManagementServiceClient, key_version_name
         CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PKCS1_4096_SHA512.name:
             build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA512),
 
+        CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PSS_2048_SHA256.name:
+            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256),
+        CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PSS_3072_SHA256.name:
+            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256),
+        CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PSS_4096_SHA256.name:
+            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256),
+        CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PSS_4096_SHA512.name:
+            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA512),
+
         CryptoKeyVersion.CryptoKeyVersionAlgorithm.EC_SIGN_P256_SHA256.name:
             build_kms_priv_key(KMSECPrivateKey, hash_algorithm=SHA256, curve=ec.SECP256R1),
         CryptoKeyVersion.CryptoKeyVersionAlgorithm.EC_SIGN_P384_SHA384.name:
