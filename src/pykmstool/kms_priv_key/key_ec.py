@@ -13,6 +13,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurveSignatureAlgorithm, EllipticCurve, ECDH, \
     EllipticCurvePublicKey, EllipticCurvePrivateKey, EllipticCurvePrivateNumbers
+from cryptography.hazmat.primitives.asymmetric.utils import Prehashed
 from cryptography.hazmat.primitives.hashes import SHA256, SHA384, SHA512
 from google.cloud.kms_v1 import KeyManagementServiceClient, CryptoKeyVersion
 
@@ -27,14 +28,14 @@ class KMSECPrivateKey(ec.EllipticCurvePrivateKey, BaseKMSPrivateKey):
             hash_algorithm: typing.Type[SHA256 | SHA384 | SHA512],
             curve: typing.Type[ec.EllipticCurve]
     ):
-        super().__init__(client, ckv, hash_algorithm)
+        super().__init__(client, ckv, hash_algorithm, rsa_padding=lambda _: None)
         self._curve = curve
 
     def __copy__(self) -> EllipticCurvePrivateKey:
         return KMSECPrivateKey(
             client=self._client,
             ckv=self._ckv,
-            hash_algorithm=self._hash_algorithm,
+            hash_algorithm=self._hash_algorithm,  # noqa
             curve=self._curve
         )
 
@@ -42,11 +43,10 @@ class KMSECPrivateKey(ec.EllipticCurvePrivateKey, BaseKMSPrivateKey):
         return self._common_public_key()
 
     def sign(self, data: utils.Buffer, signature_algorithm: EllipticCurveSignatureAlgorithm) -> bytes:
-        return self._common_sign(data, signature_algorithm.algorithm)
+        if isinstance(signature_algorithm.algorithm, Prehashed):
+            raise RuntimeError("Prehashed data is not supported.")
 
-    @property
-    def hash_algorithm(self) -> typing.Type[SHA256 | SHA384 | SHA512]:
-        return self._hash_algorithm
+        return self._common_sign(data, signature_algorithm.algorithm)  # noqa
 
     @property
     def curve(self) -> EllipticCurve:

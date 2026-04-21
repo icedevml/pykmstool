@@ -9,11 +9,8 @@ Original license BSD-3-Clause (author: @reaperhulk)
 import typing
 
 from cryptography.hazmat.primitives import serialization, hashes
-from cryptography.hazmat.primitives.asymmetric import (
-    rsa,
-    utils as asym_utils,
-)
-from cryptography.hazmat.primitives.asymmetric.padding import AsymmetricPadding
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.asymmetric.padding import AsymmetricPadding, PSS
 from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey, RSAPublicKey
 from cryptography.hazmat.primitives.hashes import SHA256, SHA384, SHA512
@@ -23,14 +20,26 @@ from pykmstool.kms_priv_key.base_key import BaseKMSPrivateKey
 
 
 class KMSRSAPrivateKey(rsa.RSAPrivateKey, BaseKMSPrivateKey):
-    def __init__(self, client: KeyManagementServiceClient, ckv: CryptoKeyVersion, hash_algorithm: typing.Type[SHA256 | SHA384 | SHA512]):
-        super().__init__(client, ckv, hash_algorithm)
+    def __init__(
+            self,
+            client: KeyManagementServiceClient,
+            ckv: CryptoKeyVersion,
+            hash_algorithm: typing.Type[SHA256 | SHA384 | SHA512],
+            rsa_padding: typing.Callable[[SHA256 | SHA384 | SHA512], PKCS1v15 | PSS],
+    ):
+        super().__init__(
+            client=client,
+            ckv=ckv,
+            hash_algorithm=hash_algorithm,
+            rsa_padding=rsa_padding  # noqa
+        )
 
     def __copy__(self) -> RSAPrivateKey:
         return KMSRSAPrivateKey(
             client=self._client,
             ckv=self._ckv,
-            hash_algorithm=self._hash_algorithm
+            hash_algorithm=self._hash_algorithm,  # noqa
+            rsa_padding=self._rsa_padding  # noqa
         )
 
     def public_key(self) -> RSAPublicKey:
@@ -40,13 +49,14 @@ class KMSRSAPrivateKey(rsa.RSAPrivateKey, BaseKMSPrivateKey):
         self,
         data: bytes,
         padding: AsymmetricPadding,
-        algorithm: typing.Union[asym_utils.Prehashed, hashes.HashAlgorithm],
+        algorithm: hashes.HashAlgorithm,
     ) -> bytes:
-        if not isinstance(padding, PKCS1v15):
+        if not isinstance(padding, PKCS1v15) and not isinstance(padding, PSS):
             raise RuntimeError("Unsupported padding type requested.")
 
         return self._common_sign(data, algorithm)
 
+    @property
     def key_size(self) -> int:
         return self.public_key().key_size
 

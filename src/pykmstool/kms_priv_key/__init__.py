@@ -7,6 +7,7 @@ import typing
 
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurve
+from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15, PSS, MGF1
 from cryptography.hazmat.primitives.hashes import SHA256, SHA384, SHA512
 from google.cloud.kms_v1 import KeyManagementServiceClient, CryptoKeyVersion
 
@@ -17,13 +18,17 @@ from pykmstool.kms_priv_key.key_rsa import KMSRSAPrivateKey
 
 def build_kms_priv_key(
         cls: typing.Type[KMSRSAPrivateKey | KMSECPrivateKey | KMSEd25519PrivateKey],
-        hash_algorithm: typing.Type[SHA256 | SHA384 | SHA512] = None,
-        curve: typing.Type[EllipticCurve] = None,
+        hash_algorithm: typing.Optional[typing.Type[SHA256 | SHA384 | SHA512]] = None,
+        rsa_padding: typing.Optional[typing.Callable[[SHA256 | SHA384 | SHA512], PKCS1v15 | PSS]] = None,
+        curve: typing.Optional[typing.Type[EllipticCurve]] = None,
 ) -> typing.Callable[..., KMSRSAPrivateKey | KMSECPrivateKey | KMSEd25519PrivateKey]:
     bind_kwargs = {}
 
     if hash_algorithm:
         bind_kwargs.update({"hash_algorithm": hash_algorithm})
+
+    if rsa_padding:
+        bind_kwargs.update({"rsa_padding": rsa_padding})
 
     if curve:
         bind_kwargs.update({"curve": curve})
@@ -33,15 +38,27 @@ def build_kms_priv_key(
 
 def create_pyca_private_key(client: KeyManagementServiceClient, key_version_name: str)\
         -> KMSRSAPrivateKey | KMSECPrivateKey | KMSEd25519PrivateKey:
+    f_pkcs1v15 = lambda _: PKCS1v15()
+    f_pss = lambda hash_alg: PSS(MGF1(hash_alg), PSS.DIGEST_LENGTH)
+
     kms_alg_to_class = {
         CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PKCS1_2048_SHA256.name:
-            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256),
+            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256, rsa_padding=f_pkcs1v15),
         CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PKCS1_3072_SHA256.name:
-            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256),
+            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256, rsa_padding=f_pkcs1v15),
         CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PKCS1_4096_SHA256.name:
-            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256),
+            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256, rsa_padding=f_pkcs1v15),
         CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PKCS1_4096_SHA512.name:
-            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA512),
+            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA512, rsa_padding=f_pkcs1v15),
+
+        CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PSS_2048_SHA256.name:
+            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256, rsa_padding=f_pss),
+        CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PSS_3072_SHA256.name:
+            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256, rsa_padding=f_pss),
+        CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PSS_4096_SHA256.name:
+            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA256, rsa_padding=f_pss),
+        CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PSS_4096_SHA512.name:
+            build_kms_priv_key(KMSRSAPrivateKey, hash_algorithm=SHA512, rsa_padding=f_pss),
 
         CryptoKeyVersion.CryptoKeyVersionAlgorithm.EC_SIGN_P256_SHA256.name:
             build_kms_priv_key(KMSECPrivateKey, hash_algorithm=SHA256, curve=ec.SECP256R1),

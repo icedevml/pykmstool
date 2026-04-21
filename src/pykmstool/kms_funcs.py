@@ -30,7 +30,11 @@ def kms_sign_csr(*, client: kms.KeyManagementServiceClient, key_version_name: st
         .subject_name(name)
     )
 
-    cert = builder.sign(signer_priv_key, signer_priv_key.hash_algorithm())
+    cert = builder.sign(
+        private_key=signer_priv_key,
+        algorithm=signer_priv_key.hash_algorithm(),
+        rsa_padding=signer_priv_key.rsa_padding(signer_priv_key.hash_algorithm())
+    )
     return cert.public_bytes(serialization.Encoding.PEM).decode('ascii')
 
 
